@@ -14,7 +14,7 @@ AnonOS is an Arch Linux-based distribution with a pre-configured Hyprland deskto
 | Menu | rofi-based categorized installer (Super+Space) |
 | Terminal | Kitty with JetBrains Mono, matrix-green on black |
 
-*(Add screenshots to `website/screenshots/` and link them here)*
+*(Add screenshots to `screenshots/` and link them here)*
 
 ---
 
@@ -187,8 +187,7 @@ AnonOS/
 │       └── usr/local/bin/
 │           ├── anonos-menu          # Main menu script
 │           └── anonos-firstboot     # First boot setup
-└── website/                         # GitHub Pages website
-    └── index.html
+└── index.html                       # GitHub Pages website (root)
 ```
 
 ---

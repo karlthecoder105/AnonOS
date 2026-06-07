@@ -1,0 +1,14 @@
+configuration {
+    modi: "window,run,drun";
+    font: "JetBrains Mono Nerd Font 12";
+    show-icons: true;
+    display-drun: " Run";
+    display-run: " Execute";
+    display-window: " Window";
+    drun-display-format: "{name}";
+    terminal: "kitty";
+    kb-cancel: "Escape,Control+g,Control+bracketleft";
+    kb-mode-next: "Shift+Tab";
+}
+
+@theme "themes/hacker"

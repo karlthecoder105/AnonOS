@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnonOS - Anonymous Operating System</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', 'JetBrains Mono', monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #001100; }
+        ::-webkit-scrollbar-thumb { background: #00ff00; border-radius: 4px; }
+
+        .crt::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 255, 0, 0.03);
+            animation: scan 8s linear infinite;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 0 40px;
+            border-bottom: 1px solid #003300;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 14px;
+            line-height: 1.2;
+            color: #00ff00;
+            margin-bottom: 20px;
+            white-space: pre;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .tagline {
+            font-size: 18px;
+            color: #005500;
+            margin-bottom: 30px;
+        }
+
+        .typing {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 3px solid #00ff00;
+            white-space: nowrap;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 36px;
+            margin: 8px;
+            background: transparent;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            text-decoration: none;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: #00ff00;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: #00ff00;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #003300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        h2::before {
+            content: "> ";
+            color: #005500;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            border: 1px solid #003300;
+            padding: 24px;
+            transition: all 0.3s;
+            background: rgba(0, 255, 0, 0.02);
+        }
+
+        .feature-card:hover {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .feature-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #00ff00;
+        }
+
+        .feature-card p {
+            color: #007700;
+            font-size: 13px;
+        }
+
+        .screenshot {
+            width: 100%;
+            border: 1px solid #003300;
+            padding: 4px;
+            background: #000;
+        }
+
+        .cmd-list {
+            list-style: none;
+        }
+
+        .cmd-list li {
+            padding: 6px 0;
+            border-bottom: 1px solid #001a00;
+            font-size: 13px;
+        }
+
+        .cmd-list li::before {
+            content: "$ ";
+            color: #005500;
+        }
+
+        .cmd-list li span {
+            color: #00ff00;
+        }
+
+        pre {
+            background: #001100;
+            border: 1px solid #003300;
+            padding: 20px;
+            overflow-x: auto;
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .ascii-art {
+            color: #00ff00;
+            font-size: 11px;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid #003300;
+            color: #005500;
+            font-size: 12px;
+        }
+
+        .blink { animation: blink 1.5s step-end infinite; }
+
+        a { color: #00ff00; }
+        a:hover { color: #44ff44; }
+
+        .prompt-line {
+            color: #005500;
+            margin-bottom: 8px;
+        }
+
+        .prompt-line span {
+            color: #00ff00;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 28px; letter-spacing: 4px; }
+            .logo { font-size: 8px; }
+            .container { padding: 20px 16px; }
+            header { padding: 40px 0 20px; }
+        }
+    </style>
+</head>
+<body class="crt">
+    <div class="scanline"></div>
+
+    <div class="container">
+
+        <header>
+            <div class="logo">
+                █████╗ ███╗   ██╗ ██████╗ ███╗   ██╗ ██████╗ ███████╗
+                ██╔══██╗████╗  ██║██╔═══██╗████╗  ██║██╔═══██╗██╔════╝
+                ███████║██╔██╗ ██║██║   ██║██╔██╗ ██║██║   ██║███████╗
+                ██╔══██║██║╚██╗██║██║   ██║██║╚██╗██║██║   ██║╚════██║
+                ██║  ██║██║ ╚████║╚██████╔╝██║ ╚████║╚██████╔╝███████║
+                ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
+            </div>
+            <h1>AnonOS</h1>
+            <p class="tagline">// <span class="typing">Anonymous Operating System</span></p>
+            <p style="color:#005500; margin-bottom: 30px;">
+                Arch Linux · Hyprland · Hacker Aesthetic
+            </p>
+            <div>
+                <a href="#download" class="btn btn-primary">Download ISO</a>
+                <a href="https://github.com/anonymous/anonos" class="btn">View on GitHub</a>
+            </div>
+        </header>
+
+        <section>
+            <h2>System Status</h2>
+            <pre>
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">uname -a</span>
+Linux anonos 6.x.x-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">fastfetch</span>
+<span style="color:#005500">         █████╗ </span><span style="color:#00ff00">  OS:</span>       AnonOS 2026.x86_64
+<span style="color:#005500">        ██╔══██╗</span><span style="color:#00ff00">  Host:</span>    x86_64
+<span style="color:#005500">        ███████║</span><span style="color:#00ff00">  Kernel:</span>  Linux 6.x.x-arch1-1
+<span style="color:#005500">        ██╔══██║</span><span style="color:#00ff00">  WM:</span>      Hyprland
+<span style="color:#005500">        ██║  ██║</span><span style="color:#00ff00">  Shell:</span>   Bash 5.x
+<span style="color:#005500">        ╚═╝  ╚═╝</span><span style="color:#00ff00">  Term:</span>    Kitty
+<span style="color:#005500">                    </span><span style="color:#00ff00">  Theme:</span>   Hacker Green
+            </pre>
+        </section>
+
+        <section>
+            <h2>Features</h2>
+            <div class="features">
+
+                <div class="feature-card">
+                    <h3>> Hyprland WM</h3>
+                    <p>Dynamic tiling window manager with green-on-black hacker aesthetic. Blazing fast Wayland compositor with smooth animations.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>> Omarchy-Style Menu</h3>
+                    <p>Press Super+Space to open the AnonOS Menu. Install packages, browse AUR, manage configs, and control your system - all from a rofi-powered interface.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>> AUR + Pacman</h3>
+                    <p>Full Arch Linux repository access plus AUR support via yay. Categorized install menu for Editors, Browsers, Security tools, Gaming, and more.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>> Hacker Theme</h3>
+                    <p>Matrix-green #00ff00 on deep black. Custom kitty terminal, waybar, rofi, dunst notifications, and hyprlock screen - all themed for the underground aesthetic.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>> Security Toolkit</h3>
+                    <p>Pre-installed with nmap, Wireshark, Metasploit, John the Ripper, Hydra, sqlmap, aircrack-ng, and more. Ready for penetration testing out of the box.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>> Developer Ready</h3>
+                    <p>Python, Node.js, Go, Rust, Docker, Neovim, Git - everything you need to build. Starship prompt, zoxide, fzf, bat, eza for a modern terminal experience.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section>
+            <h2>Keybindings</h2>
+            <pre>
+<span style="color:#005500">┌─────────────────────────────────────────┐
+│        AnonOS Keybindings              │
+├─────────────────────────────────────────┤</span>
+│ <span style="color:#00ff00">Super+Space</span>    Open AnonOS Menu          │
+│ <span style="color:#00ff00">Super+Return</span>   Open Terminal (kitty)     │
+│ <span style="color:#00ff00">Super+Q</span>        Close Focused Window      │
+│ <span style="color:#00ff00">Super+D</span>        Application Launcher      │
+│ <span style="color:#00ff00">Super+E</span>        File Manager (Thunar)     │
+│ <span style="color:#00ff00">Super+F</span>        Toggle Fullscreen         │
+│ <span style="color:#00ff00">Super+V</span>        Toggle Floating Window     │
+│ <span style="color:#00ff00">Super+L</span>        Lock Screen               │
+│ <span style="color:#00ff00">Super+T</span>        System Monitor (btop)     │
+│ <span style="color:#00ff00">Super+W</span>        Matrix Rain (cmatrix)     │
+│ <span style="color:#005500">─────────────────────────────────────────</span>│
+│ <span style="color:#00ff00">Super+Shift+N</span>  Neovim                    │
+│ <span style="color:#00ff00">Super+Shift+T</span>  Tmux                      │
+│ <span style="color:#00ff00">Super+Shift+W</span>  Btop                      │
+<span style="color:#005500">└─────────────────────────────────────────┘</span>
+            </pre>
+        </section>
+
+        <section id="download">
+            <h2>Installation</h2>
+            <div class="prompt-line"><span>root@anonos:~#</span> curl -fsSL https://anonos.org/install | bash</div>
+            <pre>
+<span style="color:#005500"># Or download the ISO and flash to USB:</span>
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">wget https://github.com/anonymous/anonos/releases/latest/download/anonos.iso</span>
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">dd if=anonos.iso of=/dev/sdb bs=4M status=progress && sync</span>
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">reboot</span>
+            </pre>
+
+            <p style="color:#007700; margin-top: 12px;">
+                Minimum: 2GB RAM · 20GB disk · x86_64 · UEFI or BIOS
+            </p>
+        </section>
+
+        <section>
+            <h2>Commands</h2>
+            <ul class="cmd-list">
+                <li><span>anonos-menu</span>        — Open the main menu (or press Super+Space)</li>
+                <li><span>hi</span>                 — Show system information</li>
+                <li><span>cm</span> or <span>matrix</span>      — Matrix rain effect</li>
+                <li><span>hack</span>               — Hollywood hacker mode</li>
+                <li><span>update</span>             — Full system update (pacman + yay)</li>
+                <li><span>install &lt;pkg&gt;</span>       — Install a package</li>
+                <li><span>search &lt;term&gt;</span>       — Search packages</li>
+                <li><span>aur &lt;pkg&gt;</span>          — Install from AUR</li>
+                <li><span>ports</span>              — Show open ports</li>
+                <li><span>myip</span>               — Show public IP</li>
+                <li><span>weather</span>            — Terminal weather</li>
+                <li><span>cheat &lt;topic&gt;</span>       — Cheat sheet for any topic</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Built With</h2>
+            <pre>
+<span style="color:#005500">  OS:</span>  Arch Linux
+<span style="color:#005500">  WM:</span>  Hyprland
+<span style="color:#005500">  Bar:</span> Waybar
+<span style="color:#005500">  Menu:</span> Rofi
+<span style="color:#005500">  Term:</span> Kitty
+<span style="color:#005500">  Shell:</span> Bash + Starship
+<span style="color:#005500">  Notify:</span> Dunst
+<span style="color:#005500">  Lock:</span> Hyprlock
+<span style="color:#005500">  Font:</span> JetBrains Mono Nerd Font
+            </pre>
+        </section>
+
+        <footer>
+            <p>AnonOS — "The quieter you become, the more you can hear."</p>
+            <p style="margin-top: 8px;">
+                Built with &#x1F5A5; for the underground &nbsp;|&nbsp; <a href="https://github.com/anonymous/anonos">GitHub</a> &nbsp;|&nbsp; <a href="#">Documentation</a>
+            </p>
+            <p style="margin-top: 12px; color: #002a00;">
+                AnonOS is not affiliated with Anonymous. It's just a Linux distro with cool colors.
+            </p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

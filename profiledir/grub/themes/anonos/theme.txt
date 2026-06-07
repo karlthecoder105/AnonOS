@@ -1,0 +1,36 @@
+# AnonOS Hacker GRUB Theme
+title-text: ""
+title-color: "#00ff00"
+title-font: "Bold 24"
+desktop-image: "background.png"
+desktop-color: "#000000"
+terminal-font: "Unifont Regular 16"
+
++ boot_menu {
+    left = 25%
+    top = 20%
+    width = 50%
+    height = 60%
+    item_color = "#005500"
+    selected_item_color = "#00ff00"
+    item_height = 32
+    item_padding = 8
+    item_spacing = 4
+    item_font = "Unifont Regular 12"
+    selected_item_font = "Unifont Bold 12"
+    selected_item_pixmap_style = "select_*.png"
+    scrollbar = true
+    scrollbar_width = 12
+    scrollbar_font = "Unifont Regular 12"
+}
+
++ label {
+    text = "AnonOS"
+    font = "Bold 36"
+    color = "#00ff00"
+    align = "center"
+    left = 0
+    top = 5%
+    width = 100%
+    height = 10%
+}

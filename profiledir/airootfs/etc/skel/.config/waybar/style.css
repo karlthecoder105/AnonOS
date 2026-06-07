@@ -1,0 +1,101 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrains Mono Nerd Font", "FiraCode Nerd Font", monospace;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(0, 0, 0, 0.85);
+    border-bottom: 1px solid #00ff00;
+    color: #00ff00;
+}
+
+#workspaces button {
+    padding: 0 6px;
+    background: transparent;
+    color: #005500;
+    border: none;
+}
+
+#workspaces button.focused {
+    color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+    border-bottom: 2px solid #00ff00;
+}
+
+#workspaces button.active {
+    color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+#workspaces button.urgent {
+    color: #ff0000;
+    background: rgba(255, 0, 0, 0.2);
+}
+
+#workspaces button:hover {
+    background: rgba(0, 255, 0, 0.15);
+    color: #00ff00;
+}
+
+#clock,
+#cpu,
+#memory,
+#pulseaudio,
+#network,
+#bluetooth,
+#custom-logo,
+#custom-power {
+    padding: 0 10px;
+    margin: 0 2px;
+}
+
+#cpu {
+    color: #00ff00;
+}
+
+#memory {
+    color: #00ff00;
+}
+
+#pulseaudio {
+    color: #00ff00;
+}
+
+#pulseaudio.muted {
+    color: #ff0000;
+}
+
+#network {
+    color: #00ff00;
+}
+
+#network.disconnected {
+    color: #ff0000;
+}
+
+#bluetooth {
+    color: #00ff00;
+}
+
+#clock {
+    color: #00ff00;
+}
+
+#custom-logo {
+    color: #00ff00;
+    padding-left: 12px;
+}
+
+#custom-power {
+    color: #00ff00;
+    padding-right: 12px;
+}
+
+tooltip {
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid #00ff00;
+    color: #00ff00;
+}

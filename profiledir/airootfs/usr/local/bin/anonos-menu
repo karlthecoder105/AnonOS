@@ -1,0 +1,224 @@
+#!/usr/bin/env bash
+# AnonOS Menu - Hacker Package Manager & System Tool
+# "The menu is the matrix. Reloaded every time."
+
+set -eE
+
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/usr/local/bin:$PATH"
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
+MENU_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/anonos-menu"
+mkdir -p "$MENU_CACHE"
+
+menu() {
+    local prompt="$1" options="$2"
+    echo -e "$options" | rofi -dmenu -i -p "$prompt" \
+        -theme "${CONFIG_DIR}/rofi/themes/hacker.rasi" \
+        -markup-rows -no-custom
+}
+
+terminal() {
+    kitty --hold -e bash -c "$*"
+}
+
+present_terminal() {
+    kitty --hold -e bash -c "$*"
+}
+
+notify() {
+    dunstify -h string:fgcolor:#00ff00 -h string:bgcolor:#000000 "AnonOS" "$1"
+}
+
+install_pkg() {
+    local name="$1" pkgs="$2"
+    present_terminal "echo 'Installing $name...'; sudo pacman -S --noconfirm $pkgs"
+    notify "Installed: $name"
+}
+
+aur_install() {
+    local name="$1" pkgs="$2"
+    present_terminal "echo 'Installing $name from AUR...'; yay -S --noconfirm $2"
+    notify "Installed from AUR: $name"
+}
+
+fzf_install_pkg() {
+    local chosen
+    chosen=$(pacman -Slq | sort | fzf --prompt="Search pacman packages > " --height=40 --layout=reverse --color="fg:#00ff00,bg:#000000,hl:#00ff00,fg+:#00ff00,bg+:#003300,hl+:#00ff00,info:#00ff00,prompt:#00ff00,pointer:#00ff00,marker:#00ff00,spinner:#00ff00,header:#00ff00")
+    if [ -n "$chosen" ]; then
+        present_terminal "echo 'Installing $chosen...'; sudo pacman -S --noconfirm $chosen"
+        notify "Installed: $chosen"
+    fi
+}
+
+fzf_install_aur() {
+    local chosen
+    if ! command -v yay &>/dev/null; then
+        present_terminal "echo 'Installing yay (AUR helper)...'; sudo pacman -S --noconfirm --needed git base-devel && git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin && cd /tmp/yay-bin && makepkg -si --noconfirm && rm -rf /tmp/yay-bin"
+    fi
+    chosen=$(yay -Slq | sort | fzf --prompt="Search AUR packages > " --height=40 --layout=reverse --color="fg:#00ff00,bg:#000000,hl:#00ff00,fg+:#00ff00,bg+:#003300,hl+:#00ff00,info:#00ff00,prompt:#00ff00,pointer:#00ff00,marker:#00ff00,spinner:#00ff00,header:#00ff00")
+    if [ -n "$chosen" ]; then
+        present_terminal "echo 'Installing $chosen from AUR...'; yay -S --noconfirm $chosen"
+        notify "Installed from AUR: $chosen"
+    fi
+}
+
+show_about_menu() {
+    case $(menu "About" "  About AnonOS\n  Keybindings\n  Terminal Commands\n  Version Info\n󰒍  Back") in
+        *About*) present_terminal "echo 'AnonOS - Anonymous Operating System'; echo; echo 'A security-focused Arch Linux distribution'; echo 'with Hyprland and a hacker aesthetic.'; echo; echo 'Built with  Arch Linux'; echo 'Window Manager: Hyprland'; echo 'Shell: Bash + Starship'; echo 'Menu: anonos-menu'; echo; echo 'Press any key to continue...'; read -n1" ;;
+        *Keybind*) present_terminal "echo '=== AnonOS Keybindings ==='; echo; echo 'Super+Space   - Open menu'; echo 'Super+R       - Open menu'; echo 'Super+Return  - Open terminal'; echo 'Super+Q       - Close window'; echo 'Super+D       - App launcher'; echo 'Super+E       - File manager'; echo 'Super+F       - Fullscreen'; echo 'Super+V       - Toggle float'; echo 'Super+L       - Lock screen'; echo 'Super+T       - System monitor'; echo 'Super+W       - Matrix (cmatrix)'; echo; echo 'Super+Shift+Q - Network config'; echo 'Super+Shift+E - Ranger (file mgr)'; echo 'Super+Shift+N - Neovim'; echo 'Super+Shift+T - Tmux'; echo 'Super+Shift+W - Btop'; echo; echo 'Press any key to continue...'; read -n1" ;;
+        *Terminal*) present_terminal "echo '=== AnonOS Terminal Commands ==='; echo; echo 'hi / neo     - System info'; echo 'cm / matrix  - Matrix rain'; echo 'hack         - Hollywood hacker'; echo 'update       - Full system update'; echo 'install      - Install package'; echo 'aur          - Install AUR package'; echo 'ls           - List files (eza)'; echo 'cat          - View file (bat)'; echo 'ports        - Show open ports'; echo 'myip         - Show IP address'; echo 'weather      - Weather report'; echo 'cheat        - Cheat sheets'; echo; echo 'Press any key to continue...'; read -n1" ;;
+        *Version*) present_terminal "echo 'AnonOS Version 1.0.0'; echo 'Kernel: Linux'; uname -a; echo; echo 'Press any key to continue...'; read -n1" ;;
+        *) show_main_menu ;;
+    esac
+}
+
+show_config_menu() {
+    case $(menu "Config" "󰸉  Set Wallpaper\n󰌌  Set GTK Theme\n  Set Font Size\n󰛖  Edit Hyprland Config\n󰛖  Edit Waybar Config\n󰛖  Edit Menu Config\n󰛖  Edit Bashrc\n󰒍  Back") in
+        *Wallpaper*)
+            local chosen
+            chosen=$(find /usr/share/backgrounds -type f \( -name '*.jpg' -o -name '*.png' \) 2>/dev/null | fzf --prompt="Select wallpaper > ")
+            if [ -n "$chosen" ]; then
+                hyprctl hyprpaper wallpaper ",$chosen"
+                echo "preload = $chosen" > "$CONFIG_DIR/hypr/hyprpaper.conf"
+                echo "wallpaper = , $chosen" >> "$CONFIG_DIR/hypr/hyprpaper.conf"
+                notify "Wallpaper changed"
+            fi ;;
+        *Theme*) present_terminal "echo 'Select GTK theme...'; pacman -Ss gtk-theme | fzf --prompt='Select theme > ' --preview='echo {}' | awk '{print \$1}' | xargs -r sudo pacman -S --noconfirm" ;;
+        *Font*) present_terminal "echo 'Install fonts...'; pacman -Ss nerd-fonts | fzf --prompt='Select font > ' | awk '{print \$1}' | xargs -r sudo pacman -S --noconfirm" ;;
+        *Hyprland*) $EDITOR "$CONFIG_DIR/hypr/hyprland.conf" ;;
+        *Waybar*) $EDITOR "$CONFIG_DIR/waybar/config" ;;
+        *Menu*) $EDITOR "/usr/local/bin/anonos-menu" ;;
+        *Bashrc*) $EDITOR "$HOME/.bashrc" ;;
+        *) show_main_menu ;;
+    esac
+}
+
+show_system_menu() {
+    case $(menu "System" "  Full System Update\n󰑤  Update AnonOS\n󰑥  Clean Package Cache\n󰋊  System Info\n󰓅  Edit Sudoers\n  Reboot\n  Shutdown\n󰒍  Back") in
+        *Update\ AnonOS*) present_terminal "echo 'Updating AnonOS configs...'; sudo anonos-update; echo 'Done! Press any key...'; read -n1" ;;
+        *Full*) present_terminal "echo '=== Full System Update ==='; echo; sudo pacman -Syu; echo; if command -v yay &>/dev/null; then yay -Syu; fi; echo; echo 'Update complete. Press any key...'; read -n1" ;;
+        *Clean*) present_terminal "echo 'Cleaning package cache...'; sudo pacman -Sc; yay -Sc 2>/dev/null; echo 'Done! Press any key...'; read -n1" ;;
+        *Info*) present_terminal "fastfetch; echo; echo 'Press any key...'; read -n1" ;;
+        *Sudoers*) $EDITOR /etc/sudoers ;;
+        *Reboot*) present_terminal "echo 'Rebooting in 3 seconds...'; sleep 3; sudo systemctl reboot" ;;
+        *Shutdown*) present_terminal "echo 'Shutting down in 3 seconds...'; sleep 3; sudo systemctl poweroff" ;;
+        *) show_main_menu ;;
+    esac
+}
+
+show_install_editor_menu() {
+    case $(menu "Install Editor" "  VSCode\n  Cursor [AUR]\n  Zed\n  Helix\n  Neovim\n  Emacs\n  Sublime Text\n  Neovim Kickstart\n󰒍  Back") in
+        *VSCode*) install_pkg "VSCode" "visual-studio-code-bin" ;;
+        *Cursor*) aur_install "Cursor" "cursor-bin" ;;
+        *Zed*) install_pkg "Zed" "zed" ;;
+        *Helix*) install_pkg "Helix" "helix" ;;
+        *Neovim*) install_pkg "Neovim" "neovim" ;;
+        *Emacs*) install_pkg "Emacs" "emacs-wayland" ;;
+        *Sublime*) install_pkg "Sublime Text" "sublime-text-4" ;;
+        *Kickstart*) present_terminal "echo 'Installing Neovim Kickstart...'; git clone https://github.com/nvim-lua/kickstart.nvim ~/.config/nvim; echo 'Done! Run nvim to install plugins.'; read -n1" ;;
+        *) show_install_menu ;;
+    esac
+}
+
+show_install_browser_menu() {
+    case $(menu "Install Browser" "  Firefox\n  Chromium\n  Brave [AUR]\n  Tor Browser [AUR]\n󰖟  Vivaldi\n󰒍  Back") in
+        *Firefox*) install_pkg "Firefox" "firefox" ;;
+        *Chromium*) install_pkg "Chromium" "chromium" ;;
+        *Brave*) aur_install "Brave" "brave-bin" ;;
+        *Tor*) aur_install "Tor Browser" "tor-browser" ;;
+        *Vivaldi*) install_pkg "Vivaldi" "vivaldi" ;;
+        *) show_install_menu ;;
+    esac
+}
+
+show_install_gaming_menu() {
+    case $(menu "Install Gaming" "  Steam\n  RetroArch [AUR]\n󰍳  Minecraft\n  Lutris\n  Heroic Launcher [AUR]\n󰒍  Back") in
+        *Steam*) present_terminal "echo 'Installing Steam...'; sudo pacman -S --noconfirm steam steam-native-runtime" ;;
+        *RetroArch*) aur_install "RetroArch" "retroarch retroarch-assets libretro" ;;
+        *Minecraft*) install_pkg "Minecraft" "minecraft-launcher" ;;
+        *Lutris*) install_pkg "Lutris" "lutris" ;;
+        *Heroic*) aur_install "Heroic" "heroic-games-launcher-bin" ;;
+        *) show_install_menu ;;
+    esac
+}
+
+show_install_security_menu() {
+    case $(menu "Install Security" "󰒃  Nmap\n󰛳  Wireshark\n󰒃  Metasploit\n󰒃  John the Ripper\n󰒃  Hydra\n󰒃  Sqlmap\n󰒃  Nikto\n󰒃  Gobuster\n󰒃  Aircrack-ng\n󰒍  Back") in
+        *Nmap*) install_pkg "Nmap" "nmap" ;;
+        *Wireshark*) install_pkg "Wireshark" "wireshark-qt" ;;
+        *Metasploit*) install_pkg "Metasploit" "metasploit" ;;
+        *John*) install_pkg "John the Ripper" "john" ;;
+        *Hydra*) install_pkg "Hydra" "hydra" ;;
+        *Sqlmap*) install_pkg "Sqlmap" "sqlmap" ;;
+        *Nikto*) install_pkg "Nikto" "nikto" ;;
+        *Gobuster*) install_pkg "Gobuster" "gobuster" ;;
+        *Aircrack*) install_pkg "Aircrack-ng" "aircrack-ng" ;;
+        *) show_install_menu ;;
+    esac
+}
+
+show_install_dev_menu() {
+    case $(menu "Install Development" "  Docker\n󰡨  Docker Compose\n󱄅  Podman\n  VS Code\n  Node.js\n󰟵  Python Packages\n󰛖  Go Tools\n  Git Tools\n󰒍  Back") in
+        *Docker*) install_pkg "Docker" "docker" && present_terminal "echo 'Enabling Docker...'; sudo systemctl enable --now docker; sudo usermod -aG docker $USER; echo 'Added user to docker group. Re-login to use.'" ;;
+        *Docker\ Compose*) install_pkg "Docker Compose" "docker-compose" ;;
+        *Podman*) install_pkg "Podman" "podman podman-compose" ;;
+        *VS\ Code*) install_pkg "VS Code" "visual-studio-code-bin" ;;
+        *Node.js*) install_pkg "Node.js" "nodejs npm" ;;
+        *Python*) present_terminal "echo 'Installing Python tools...'; pip install --user pipx && pipx ensurepath" ;;
+        *Go*) install_pkg "Go Tools" "go" ;;
+        *Git*) install_pkg "Git Tools" "git git-lfs lazygit" ;;
+        *) show_install_menu ;;
+    esac
+}
+
+show_install_terminal_menu() {
+    case $(menu "Install Terminal" "  Alacritty\n  WezTerm\n  Tmux\n  Zellij\n  Zsh\n  Fish\n󰒍  Back") in
+        *Alacritty*) install_pkg "Alacritty" "alacritty" ;;
+        *WezTerm*) install_pkg "WezTerm" "wezterm" ;;
+        *Tmux*) install_pkg "Tmux" "tmux" ;;
+        *Zellij*) install_pkg "Zellij" "zellij" ;;
+        *Zsh*) install_pkg "Zsh" "zsh" && present_terminal "echo 'Setting Zsh as default...'; chsh -s /usr/bin/zsh; echo 'Done. Re-login to use.'" ;;
+        *Fish*) install_pkg "Fish" "fish" && present_terminal "echo 'Setting Fish as default...'; chsh -s /usr/bin/fish; echo 'Done. Re-login to use.'" ;;
+        *) show_install_menu ;;
+    esac
+}
+
+show_install_social_menu() {
+    case $(menu "Install Social" "󰙯  Discord\n  Telegram\n󰘄  Signal [AUR]\n  GitHub CLI\n󰒍  Back") in
+        *Discord*) install_pkg "Discord" "discord" ;;
+        *Telegram*) install_pkg "Telegram" "telegram-desktop" ;;
+        *Signal*) aur_install "Signal" "signal-desktop-bin" ;;
+        *GitHub*) install_pkg "GitHub CLI" "github-cli" ;;
+        *) show_install_menu ;;
+    esac
+}
+
+show_install_menu() {
+    case $(menu "Install" "󰣇  Package\n󰣇  AUR\n  Web App (native)\n  Editor\n  Browser\n  Gaming\n󰒃  Security\n󰵮  Development\n  Terminal\n󰙯  Social\n󰒍  Back") in
+        *Package*) fzf_install_pkg ;;
+        *AUR*) fzf_install_aur ;;
+        *Web*) present_terminal "echo 'Install web apps as native via Nativefier...'; echo 'First install Nativefier: npm install -g nativefier'; read -n1" ;;
+        *Editor*) show_install_editor_menu ;;
+        *Browser*) show_install_browser_menu ;;
+        *Gaming*) show_install_gaming_menu ;;
+        *Security*) show_install_security_menu ;;
+        *Development*) show_install_dev_menu ;;
+        *Terminal*) show_install_terminal_menu ;;
+        *Social*) show_install_social_menu ;;
+        *) show_main_menu ;;
+    esac
+}
+
+show_main_menu() {
+    case $(menu "AnonOS" "󰣇  Install\n󰛖  Config\n󰓅  System\n󰋊  About\n  Exit") in
+        *Install*) show_install_menu ;;
+        *Config*) show_config_menu ;;
+        *System*) show_system_menu ;;
+        *About*) show_about_menu ;;
+        *Exit*) exit 0 ;;
+        *) exit 0 ;;
+    esac
+}
+
+show_main_menu

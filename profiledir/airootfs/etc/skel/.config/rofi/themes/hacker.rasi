@@ -1,0 +1,121 @@
+/* AnonOS Hacker Theme for Rofi */
+
+* {
+    bg-col:        #000000;
+    bg-col-light:  #001100;
+    border-col:    #00ff00;
+    selected-col:  #003300;
+    fg-col:        #00ff00;
+    fg-col-dim:    #005500;
+    urgent-col:    #ff0000;
+
+    background-color: transparent;
+    text-color: @fg-col;
+
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    background-color: rgba(0, 0, 0, 0.92);
+    border: 2px;
+    border-color: @border-col;
+    border-radius: 8;
+    padding: 12;
+    width: 600;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+    padding: 0;
+    spacing: 8;
+}
+
+inputbar {
+    children: [ prompt, entry, num-filtered-rows, case-indicator ];
+    background-color: @bg-col-light;
+    padding: 8;
+    border-radius: 4;
+    spacing: 8;
+}
+
+prompt {
+    text-color: @fg-col;
+    background-color: transparent;
+    padding: 0 8 0 0;
+}
+
+entry {
+    text-color: @fg-col;
+    background-color: transparent;
+    cursor: block;
+    placeholder: ">";
+    placeholder-color: @fg-col-dim;
+}
+
+num-filtered-rows {
+    text-color: @fg-col-dim;
+}
+
+case-indicator {
+    text-color: @fg-col-dim;
+}
+
+listview {
+    lines: 12;
+    columns: 1;
+    fixed-height: true;
+    dynamic: true;
+    spacing: 2;
+    padding: 4 0 0 0;
+    scrollbar: true;
+    scrollbar-width: 4;
+}
+
+element {
+    padding: 8;
+    border-radius: 4;
+    text-color: @fg-col;
+}
+
+element selected {
+    background-color: @selected-col;
+    text-color: @fg-col;
+    border: 1px;
+    border-color: @border-col;
+}
+
+element urgent {
+    text-color: @urgent-col;
+}
+
+element-icon {
+    size: 24;
+    padding: 0 8 0 0;
+}
+
+element-text {
+    vertical-align: 0.5;
+    text-color: inherit;
+}
+
+scrollbar {
+    handle-width: 4;
+    handle-color: @border-col;
+}
+
+sidebar {
+    background-color: @bg-col-light;
+    border: 0;
+}
+
+button {
+    text-color: @fg-col-dim;
+    background-color: transparent;
+}
+
+button selected {
+    text-color: @fg-col;
+    background-color: @selected-col;
+}

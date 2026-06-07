@@ -1,0 +1,15 @@
+font=JetBrains Mono Nerd Font 12
+width=600
+height=400
+location=center
+show=drun
+prompt=> 
+term=kitty
+allow_markup=true
+insensitive=true
+filter_rate=100
+no_actions=true
+gtk_dark=true
+disable_loading_indicators=true
+css_path=$HOME/.config/wofi/style.css
+halign=f直流ill

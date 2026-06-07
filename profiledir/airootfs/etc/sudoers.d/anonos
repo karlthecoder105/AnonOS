@@ -1,0 +1,5 @@
+# AnonOS sudoers - allow wheel group to run any command
+%wheel ALL=(ALL:ALL) ALL
+
+# Allow pacman and yay without password for convenience (optional)
+# %wheel ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/yay

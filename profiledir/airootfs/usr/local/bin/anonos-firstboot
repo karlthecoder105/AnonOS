@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# AnonOS First Boot - System Setup
+# Runs once as root via systemd
+
+FLAG_FILE="/var/lib/anonos/firstboot-done"
+
+if [ -f "$FLAG_FILE" ]; then
+    exit 0
+fi
+
+# Enable services
+systemctl enable --now NetworkManager 2>/dev/null || true
+systemctl enable --now bluetooth 2>/dev/null || true
+systemctl enable --now systemd-resolved 2>/dev/null || true
+systemctl enable --now docker 2>/dev/null || true
+systemctl enable --now cups 2>/dev/null || true
+
+# Add live user to groups
+usermod -aG docker anonos 2>/dev/null || true
+
+mkdir -p /var/lib/anonos
+touch "$FLAG_FILE"

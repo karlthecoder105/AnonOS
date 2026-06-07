@@ -1,0 +1,64 @@
+/* AnonOS Hacker Theme for Wofi */
+
+window {
+    background-color: rgba(0, 0, 0, 0.92);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    font-family: "JetBrains Mono Nerd Font";
+    font-size: 12px;
+}
+
+* {
+    color: #00ff00;
+}
+
+#input {
+    background-color: #001100;
+    border: none;
+    border-bottom: 1px solid #00ff00;
+    color: #00ff00;
+    padding: 8px;
+    margin: 8px;
+    font-size: 14px;
+}
+
+#input:focus {
+    box-shadow: none;
+}
+
+#inner-box {
+    background-color: transparent;
+    margin: 4px;
+}
+
+#outer-box {
+    margin: 4px;
+}
+
+#scroll {
+    margin: 4px;
+}
+
+#text {
+    padding: 4px 8px;
+    color: #00ff00;
+}
+
+#entry {
+    padding: 6px;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+#entry:selected {
+    background-color: #003300;
+    border: 1px solid #00ff00;
+}
+
+#img {
+    padding: 0 8px;
+}
+
+#unselected {
+    color: #005500;
+}

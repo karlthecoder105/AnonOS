@@ -1,0 +1,79 @@
+# AnonOS Hacker Starship Prompt
+
+format = """
+[](#00ff00)\
+$os\
+$username\
+[](bg:#003300 fg:#00ff00)\
+$directory\
+$git_branch\
+$git_status\
+[](fg:#003300)\
+$fill\
+$memory_usage\
+$cmd_duration\
+$line_break\
+$character"""
+
+palette = "hacker"
+
+[palettes.hacker]
+green = "#00ff00"
+dark_green = "#005500"
+black = "#000000"
+white = "#cccccc"
+
+[os]
+disabled = false
+style = "bg:#00ff00 fg:#000000"
+format = "[ $symbol ]($style)"
+
+[os.symbols]
+Arch = " AnonOS"
+
+[username]
+show_always = true
+style_user = "bg:#003300 fg:#00ff00"
+style_root = "bg:#ff0000 fg:#000000"
+format = "[ $user ]($style)"
+
+[directory]
+style = "bg:#003300 fg:#00ff00"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "  "
+"Downloads" = "  "
+"Desktop" = "   "
+"Projects" = "   "
+"Music" = "   "
+
+[git_branch]
+style = "bg:#003300 fg:#00ff00"
+format = "[ $symbol$branch ]($style)"
+
+[git_status]
+style = "bg:#003300 fg:#00ff00"
+format = "[$all_status$ahead_behind ]($style)"
+
+[memory_usage]
+disabled = false
+style = "bg:#003300 fg:#00ff00"
+format = "[ $symbol${ram_pct}% ]($style)"
+threshold = -1
+symbol = "  "
+
+[cmd_duration]
+style = "bg:#003300 fg:#005500"
+format = "[  $duration ]($style)"
+
+[character]
+success_symbol = "[▶](bold #00ff00)"
+error_symbol = "[▶](bold #ff0000)"
+vicmd_symbol = "[▼](bold #00ff00)"
+
+[fill]
+symbol = " "
+style = "bg:#003300"

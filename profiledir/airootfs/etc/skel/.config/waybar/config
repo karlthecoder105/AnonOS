@@ -1,0 +1,77 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "spacing": 8,
+    "modules-left": ["custom/logo", "hyprland/workspaces"],
+    "modules-center": ["hyprland/window"],
+    "modules-right": ["pulseaudio", "network", "bluetooth", "cpu", "memory", "clock", "custom/power"],
+    "hyprland/workspaces": {
+        "format": "{name}",
+        "on-click": "activate",
+        "all-outputs": true,
+        "persistent_workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": []
+        }
+    },
+    "hyprland/window": {
+        "format": "<span foreground='#00ff00'>{}</span>",
+        "separate-outputs": true
+    },
+    "clock": {
+        "format": "<span foreground='#00ff00'>{:%H:%M:%S}</span>",
+        "format-alt": "<span foreground='#00ff00'>{:%Y-%m-%d}</span>",
+        "interval": 1,
+        "tooltip-format": "<tt><small>{:%Y-%m-%d | %H:%M}</small></tt>"
+    },
+    "cpu": {
+        "format": "<span foreground='#00ff00'> {usage}%</span>"
+    },
+    "memory": {
+        "format": "<span foreground='#00ff00'> {}%</span>"
+    },
+    "pulseaudio": {
+        "format": "<span foreground='#00ff00'>{icon} {volume}%</span>",
+        "format-bluetooth": "<span foreground='#00ff00'>{icon} {volume}%</span>",
+        "format-muted": "<span foreground='#ff0000'> M</span>",
+        "format-icons": {
+            "headphones": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "scroll-step": 5,
+        "on-click": "pavucontrol"
+    },
+    "network": {
+        "format-wifi": "<span foreground='#00ff00'> {signalStrength}%</span>",
+        "format-ethernet": "<span foreground='#00ff00'> UP</span>",
+        "format-disconnected": "<span foreground='#ff0000'> OFF</span>",
+        "tooltip-format": "{ifname} via {gwaddr}",
+        "on-click": "kitty -e nmtui"
+    },
+    "bluetooth": {
+        "format": "<span foreground='#00ff00'> {status}</span>",
+        "format-disabled": "",
+        "format-connected": "<span foreground='#00ff00'> {num_connections}</span>",
+        "on-click": "blueman-manager",
+        "tooltip-format": "{device_enumerate}"
+    },
+    "custom/logo": {
+        "format": "<span foreground='#00ff00'>⡿ AnonOS</span>",
+        "interval": "once",
+        "tooltip": true
+    },
+    "custom/power": {
+        "format": "<span foreground='#00ff00'>⏻</span>",
+        "on-click": "wlogout -p layer-shell",
+        "tooltip": false
+    }
+}

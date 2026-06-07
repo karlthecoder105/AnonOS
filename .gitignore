@@ -1,0 +1,14 @@
+# Build artifacts
+build/work/
+build/*.iso
+build/*.iso.sig
+
+# Docker
+Dockerfile
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~

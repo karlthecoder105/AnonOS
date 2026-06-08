@@ -1,0 +1,53 @@
+name: Build and Release ISO
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build ISO in Arch Linux container
+        run: |
+          docker run --privileged --rm \
+            -v "$GITHUB_WORKSPACE":/build \
+            archlinux:latest \
+            /bin/bash -lc '
+              set -e
+              pacman -Syu --noconfirm archiso imagemagick ttf-jetbrains-mono-nerd
+              cd /build
+              chmod +x build.sh
+              ./build.sh
+            '
+
+      - name: Resolve ISO path
+        id: iso
+        run: |
+          set -e
+          ISO_FILE=$(ls -1 build/*.iso | head -n 1)
+          echo "iso_file=$ISO_FILE" >> "$GITHUB_OUTPUT"
+          echo "iso_name=$(basename "$ISO_FILE")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: anonos-iso
+          path: ${{ steps.iso.outputs.iso_file }}
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: anonos-${{ github.run_number }}
+          name: AnonOS Build ${{ github.run_number }}
+          files: ${{ steps.iso.outputs.iso_file }}
+          generate_release_notes: true

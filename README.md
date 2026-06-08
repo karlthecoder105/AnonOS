@@ -1,3 +1,5 @@
+## Check more on the website: https://karlthecoder105.github.io/AnonOS/
+
 # AnonOS
 
 > Anonymous Operating System — Arch Linux · Hyprland · Hacker Aesthetic
@@ -8,7 +10,7 @@ AnonOS is an Arch Linux-based distribution with a pre-configured Hyprland deskto
 
 ## Screenshots
 
-## Check more on the website: https://karlthecoder105.github.io/AnonOS/
+
 
 | Component | Preview |
 |-----------|---------|

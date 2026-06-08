@@ -17,8 +17,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build ISO in Arch Linux container
+      - name: Build ISO with build.sh
         run: |
+          chmod +x ./build.sh
           docker run --privileged --rm \
             -v "$GITHUB_WORKSPACE":/build \
             archlinux:latest \
@@ -26,7 +27,6 @@ jobs:
               set -e
               pacman -Syu --noconfirm archiso imagemagick ttf-jetbrains-mono-nerd
               cd /build
-              chmod +x build.sh
               ./build.sh
             '
 

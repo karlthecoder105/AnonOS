@@ -38,7 +38,16 @@ AnonOS is an Arch Linux-based distribution with a pre-configured Hyprland deskto
 
 ### Download the ISO
 
-Grab the latest release from the [Releases page](https://github.com/karlthecoder105/AnonOS/releases) or build it yourself (see below).
+Grab the latest release from [GitHub Releases](https://github.com/karlthecoder105/AnonOS/releases) or build it yourself (see below).
+
+**ISO split into parts** (GitHub has a 2GB limit):
+
+```bash
+# Download all parts, then reassemble:
+cat anonos.iso.part.* > anonos.iso
+sha256sum anonos.iso
+dd if=anonos.iso of=/dev/sdX bs=4M status=progress && sync
+```
 
 ### Flash to USB
 

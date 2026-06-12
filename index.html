@@ -277,7 +277,7 @@
                 Arch Linux · Hyprland · Hacker Aesthetic
             </p>
             <div>
-                <a href="#download" class="btn btn-primary">Download ISO</a>
+                <a href="https://github.com/karlthecoder105/AnonOS/releases" class="btn btn-primary">Download ISO</a>
                 <a href="https://github.com/karlthecoder105/AnonOS" class="btn">View on GitHub</a>
             </div>
         </header>
@@ -361,12 +361,13 @@ Linux anonos 6.x.x-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux
 
         <section id="download">
             <h2>Installation</h2>
-            <div class="prompt-line"><span>root@anonos:~#</span> curl -fsSL https://anonos.org/install | bash</div>
             <pre>
-<span style="color:#005500"># Or download the ISO and flash to USB:</span>
-<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">wget https://github.com/karlthecoder105/AnonOS/releases/latest/download/anonos.iso</span>
-<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">dd if=anonos.iso of=/dev/sdb bs=4M status=progress && sync</span>
-<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">reboot</span>
+<span style="color:#005500"># Download parts and reassemble:</span>
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">wget https://github.com/karlthecoder105/AnonOS/releases/latest/download/anonos.iso.part.aa</span>
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">wget https://github.com/karlthecoder105/AnonOS/releases/latest/download/anonos.iso.part.ab</span>
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">wget https://github.com/karlthecoder105/AnonOS/releases/latest/download/anonos.iso.part.ac</span>
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">cat anonos.iso.part.* > anonos.iso</span>
+<span style="color:#005500">root@anonos:~#</span> <span style="color:#00ff00">dd if=anonos.iso of=/dev/sdX bs=4M status=progress && sync</span>
             </pre>
 
             <p style="color:#007700; margin-top: 12px;">

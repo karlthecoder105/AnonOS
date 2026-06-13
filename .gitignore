@@ -1,7 +1,7 @@
 # Build artifacts
-build/work/
-build/*.iso
-build/*.iso.sig
+build/
+*.iso
+*.iso.sig
 
 # Docker
 Dockerfile
